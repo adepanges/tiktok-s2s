@@ -29,6 +29,12 @@ const worker = async (data, done) => {
         response: JSON.stringify(result),
       }));
       logInfo(`[PROCESSED]: POSTBACK ${data.reference_id} WITH TTCLID ${data.reference_code}`, {log_id: log._id, batch_id: data.batch_id});
+    } else {
+      const log = await PostbackLog.insert(Object.assign(data, {
+        status: "FAILED",
+        response: JSON.stringify(result),
+      }));
+      logInfo(`[FAILED]: POSTBACK ${data.reference_id} WITH TTCLID ${data.reference_code}`, {log_id: log._id, batch_id: data.batch_id});
     }
     done(null, `Done ${postback._id}`);
   }
